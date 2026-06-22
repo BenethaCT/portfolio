@@ -93,6 +93,149 @@
       .stat-item { border-right: none; border-bottom: 1px solid rgba(1,118,211,0.2); padding-bottom: 16px; }
       .stat-item:last-child { border-bottom: none; }
     }
+
+    /* ── Feedback Widget ─────────────────────────────────────── */
+    #fwTrigger {
+      position: fixed; bottom: 82px; right: 18px; z-index: 200;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sfblue), var(--accent));
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 24px rgba(0,161,224,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #fwTrigger:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(0,161,224,0.6); }
+    #fwTooltip {
+      position: fixed; bottom: 94px; right: 74px; z-index: 201;
+      background: rgba(13,31,60,0.97); border: 1px solid rgba(1,118,211,0.35);
+      color: #c5d9f5; font-size: 0.74rem; padding: 6px 12px; border-radius: 8px;
+      white-space: nowrap; pointer-events: none;
+      opacity: 0; transform: translateX(6px); transition: opacity 0.2s, transform 0.2s;
+    }
+    #fwTooltip::after {
+      content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+      border: 6px solid transparent; border-left-color: rgba(13,31,60,0.97);
+      border-right: none;
+    }
+    #fwTrigger:hover ~ #fwTooltip,
+    #fwTooltip.show { opacity: 1; transform: translateX(0); }
+
+    #fwPanel {
+      position: fixed; bottom: 82px; right: 18px; z-index: 210;
+      width: 340px; max-height: 520px;
+      background: rgba(10,22,40,0.97); border: 1px solid rgba(1,118,211,0.25);
+      border-radius: 18px; box-shadow: 0 12px 56px rgba(0,0,0,0.6), 0 0 40px rgba(1,118,211,0.15);
+      display: none; flex-direction: column; overflow: hidden;
+      transform-origin: bottom right;
+      animation: fwSlideIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #fwPanel.open { display: flex; }
+    @keyframes fwSlideIn {
+      from { opacity: 0; transform: scale(0.85) translateY(12px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .fw-header {
+      background: linear-gradient(135deg, rgba(1,118,211,0.2), rgba(0,161,224,0.08));
+      border-bottom: 1px solid rgba(1,118,211,0.18);
+      padding: 14px 16px 12px; display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    }
+    .fw-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid rgba(0,161,224,0.5); object-fit: cover; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--sfblue), var(--accent));
+    }
+    .fw-header-text { flex: 1; min-width: 0; }
+    .fw-header-name { color: #fff; font-weight: 700; font-size: 0.88rem; font-family: 'Sora', sans-serif; }
+    .fw-header-sub  { color: var(--slate-text); font-size: 0.7rem; margin-top: 1px; }
+    .fw-close {
+      background: none; border: none; color: var(--slate-text); font-size: 1.2rem;
+      cursor: pointer; padding: 2px; line-height: 1; transition: color 0.2s;
+    }
+    .fw-close:hover { color: #fff; }
+
+    .fw-body { padding: 16px; flex: 1; overflow-y: auto; }
+
+    .fw-menu-row { display: flex; gap: 10px; }
+    .fw-menu-btn {
+      flex: 1; padding: 12px 8px; border-radius: 12px;
+      background: rgba(1,118,211,0.08); border: 1px solid rgba(1,118,211,0.2);
+      color: #c5d9f5; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .fw-menu-btn:hover { background: rgba(1,118,211,0.22); border-color: rgba(27,150,255,0.5); transform: translateY(-2px); }
+    .fw-menu-btn svg { opacity: 0.85; }
+
+    .fw-view { display: none; }
+    .fw-view.active { display: block; }
+
+    .fw-back {
+      background: none; border: none; color: var(--accent); font-size: 0.73rem;
+      cursor: pointer; padding: 0 0 10px 0; display: flex; align-items: center; gap: 5px;
+    }
+    .fw-back:hover { color: var(--sfblue-light); }
+
+    .fw-label { color: var(--slate-text); font-size: 0.73rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+    .fw-input, .fw-textarea {
+      width: 100%; background: rgba(13,31,60,0.8); border: 1px solid rgba(1,118,211,0.2);
+      border-radius: 9px; color: #e2e8f0; font-size: 0.82rem; padding: 9px 12px;
+      font-family: 'Inter', sans-serif; outline: none; box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+    .fw-input:focus, .fw-textarea:focus { border-color: rgba(27,150,255,0.6); }
+    .fw-textarea { resize: none; height: 90px; }
+
+    .fw-submit {
+      width: 100%; margin-top: 14px; padding: 10px;
+      background: linear-gradient(135deg, var(--sfblue), var(--accent));
+      border: none; border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.82rem;
+      cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+    }
+    .fw-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+    .fw-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .fw-toast {
+      background: rgba(0,161,224,0.15); border: 1px solid rgba(0,161,224,0.4);
+      border-radius: 10px; color: #7dd3fc; font-size: 0.8rem; text-align: center;
+      padding: 10px 14px; margin-top: 12px; display: none;
+    }
+    .fw-toast.show { display: block; }
+
+    /* Chat bubbles */
+    .fw-chat-wrap { display: flex; flex-direction: column; gap: 10px; min-height: 180px; }
+    .fw-bubble {
+      max-width: 85%; padding: 9px 12px; border-radius: 14px; font-size: 0.8rem; line-height: 1.55;
+    }
+    .fw-bubble.bot {
+      align-self: flex-start;
+      background: rgba(1,118,211,0.14); border: 1px solid rgba(1,118,211,0.2); color: #c5d9f5;
+      border-bottom-left-radius: 4px;
+    }
+    .fw-bubble.user {
+      align-self: flex-end;
+      background: var(--sfblue); color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .fw-bubble.thinking { opacity: 0.6; font-style: italic; }
+    .fw-chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
+    .fw-chat-input {
+      flex: 1; background: rgba(13,31,60,0.8); border: 1px solid rgba(1,118,211,0.2);
+      border-radius: 9px; color: #e2e8f0; font-size: 0.8rem; padding: 8px 11px;
+      font-family: 'Inter', sans-serif; outline: none;
+      transition: border-color 0.2s;
+    }
+    .fw-chat-input:focus { border-color: rgba(27,150,255,0.5); }
+    .fw-chat-send {
+      width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+      background: var(--sfblue); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .fw-chat-send:hover { background: var(--sfblue-light); }
+
+    @media (max-width: 480px) {
+      #fwPanel { width: calc(100vw - 20px); right: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -515,6 +658,87 @@
   <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
 
+<!-- ══ FEEDBACK & INQUIRY WIDGET ══════════════════════════════ -->
+
+<!-- Trigger button -->
+<button id="fwTrigger" aria-label="Send feedback or ask a question" onclick="fwOpen()">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+</button>
+<div id="fwTooltip">Send me feedbacks.</div>
+
+<!-- Panel -->
+<div id="fwPanel" role="dialog" aria-label="Feedback and Inquiry">
+
+  <!-- Header -->
+  <div class="fw-header">
+    <img class="fw-avatar" id="fwAvatar"
+      src="https://media.licdn.com/dms/image/v2/D5603AQGgH74r6DaKYQ/profile-displayphoto-shrink_800_800/B56ZPvZ1KtHgAc-/0/1734949680990?e=1753920000&v=beta&t=Jx6EKXRe_bxRpU3HBDopkJrN3sN7wODH49ZPkBYQlTM"
+      alt="Benetha C T"
+      onerror="this.style.display='none'">
+    <div class="fw-header-text">
+      <div class="fw-header-name">Benetha C T</div>
+      <div class="fw-header-sub">Digital Product Owner · CRM Strategist</div>
+    </div>
+    <button class="fw-close" onclick="fwClose()" aria-label="Close">&#x2715;</button>
+  </div>
+
+  <!-- Body -->
+  <div class="fw-body">
+
+    <!-- View: menu -->
+    <div id="fwViewMenu" class="fw-view active">
+      <div style="color:#8fa3c0;font-size:0.78rem;margin-bottom:14px;line-height:1.5;">
+        Hi there 👋 How can I help you today?
+      </div>
+      <div class="fw-menu-row">
+        <button class="fw-menu-btn" onclick="fwShow('fwViewFeedback')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M11 5H6a2 2 0 00-2 2v11l4-4h9a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M14 3h6v6"/><path d="M18 3l-6 6"/></svg>
+          Send feedback
+        </button>
+        <button class="fw-menu-btn" onclick="fwShow('fwViewChat')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Ask a question
+        </button>
+      </div>
+    </div>
+
+    <!-- View: feedback form -->
+    <div id="fwViewFeedback" class="fw-view">
+      <button class="fw-back" onclick="fwShow('fwViewMenu')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div class="fw-label">Your Name</div>
+      <input id="fwName" class="fw-input" type="text" placeholder="Enter your name" style="margin-bottom:12px;">
+      <div class="fw-label">Your Feedback</div>
+      <textarea id="fwFeedback" class="fw-textarea" placeholder="Share your thoughts…"></textarea>
+      <button class="fw-submit" id="fwSendBtn" onclick="fwSendFeedback()">Send Feedback</button>
+      <div class="fw-toast" id="fwToast">🎉 Thanks for your feedback.</div>
+    </div>
+
+    <!-- View: chatbot -->
+    <div id="fwViewChat" class="fw-view">
+      <button class="fw-back" onclick="fwShow('fwViewMenu')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div class="fw-chat-wrap" id="fwChatWrap"></div>
+      <div class="fw-chat-input-row">
+        <input class="fw-chat-input" id="fwChatInput" placeholder="Ask about my work…" onkeydown="if(event.key==='Enter')fwAsk()">
+        <button class="fw-chat-send" onclick="fwAsk()" aria-label="Send">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /fw-body -->
+</div><!-- /fwPanel -->
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <script>
   document.getElementById('mobileMenuBtn').addEventListener('click', () =>
     document.getElementById('mobileMenu').classList.toggle('hidden'));
@@ -555,6 +779,201 @@
     document.body.style.overflow = '';
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  /* ══ FEEDBACK WIDGET ══════════════════════════════════════════ */
+
+  // ── EmailJS init ──────────────────────────────────────────────
+  // SETUP INSTRUCTIONS:
+  //   1. Go to https://www.emailjs.com/ → sign up free
+  //   2. Add an Email Service (Gmail) → copy the Service ID below
+  //   3. Create a Template with these variables:
+  //        {{from_name}}  {{reply_to}}  {{subject}}  {{message}}
+  //      Copy the Template ID below
+  //   4. Go to Account → API Keys → copy your Public Key below
+  const EJS_PUBLIC_KEY  = 'FME7YrCPGZ4Eyw9OK';
+  const EJS_SERVICE_ID  = 'service_sfn1agi';
+  const EJS_TEMPLATE_ID = 'template_9brp91o';
+  emailjs.init({ publicKey: EJS_PUBLIC_KEY });
+
+  // ── Panel open/close ─────────────────────────────────────────
+  function fwOpen() {
+    const panel = document.getElementById('fwPanel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) fwShow('fwViewMenu');
+  }
+  function fwClose() {
+    document.getElementById('fwPanel').classList.remove('open');
+  }
+
+  // ── Show a view within the panel ─────────────────────────────
+  function fwShow(viewId) {
+    document.querySelectorAll('.fw-view').forEach(v => v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    if (viewId === 'fwViewChat' && document.getElementById('fwChatWrap').children.length === 0) {
+      fwBotMsg("Hi! I'm Benetha's portfolio assistant 🤖 Ask me anything about her experience, skills, or certifications.");
+    }
+    // reset feedback form when switching away
+    if (viewId !== 'fwViewFeedback') {
+      document.getElementById('fwToast').classList.remove('show');
+      document.getElementById('fwSendBtn').disabled = false;
+    }
+  }
+
+  // ── Tooltip hover show ────────────────────────────────────────
+  document.getElementById('fwTrigger').addEventListener('mouseenter', () =>
+    document.getElementById('fwTooltip').classList.add('show'));
+  document.getElementById('fwTrigger').addEventListener('mouseleave', () =>
+    document.getElementById('fwTooltip').classList.remove('show'));
+
+  // ── Send feedback via EmailJS ─────────────────────────────────
+  async function fwSendFeedback() {
+    const name     = document.getElementById('fwName').value.trim();
+    const feedback = document.getElementById('fwFeedback').value.trim();
+    if (!name || !feedback) { alert('Please fill in both fields.'); return; }
+
+    const btn = document.getElementById('fwSendBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      const result = await emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, {
+        from_name : name,
+        reply_to  : 'benetha.c.t@gmail.com',
+        subject   : `Portfolio: ${name} - feedback`,
+        message   : feedback
+      });
+      console.log('EmailJS success:', result);
+      document.getElementById('fwToast').classList.add('show');
+      document.getElementById('fwName').value = '';
+      document.getElementById('fwFeedback').value = '';
+      btn.textContent = 'Sent ✓';
+    } catch (err) {
+      console.error('EmailJS error:', err.status, err.text, err);
+      btn.disabled = false;
+      btn.textContent = 'Send Feedback';
+      alert('Error ' + (err.status || '') + ': ' + (err.text || JSON.stringify(err)));
+    }
+  }
+
+  // ── Chatbot ───────────────────────────────────────────────────
+  const FW_OUT_OF_SCOPE = "The requirement you ask now is out of scope. We will take this up as an enhancement for our future versions 😉";
+
+  // The full knowledge base (kept client-side; no backend needed)
+  const FW_CONTEXT = `
+You are a portfolio assistant for Benetha C T. Answer questions ONLY about the professional background, skills, experience, projects, certifications, and education listed below. If a question is outside this scope, respond with exactly: "${FW_OUT_OF_SCOPE}"
+
+--- RESUME & PORTFOLIO CONTENT ---
+
+NAME: Benetha C T
+TITLE: Agile Product Owner | Digital Product Owner | CRM Strategist
+LOCATION: Chennai, India
+EMAIL: benetha.c.t@gmail.com
+LINKEDIN: linkedin.com/in/benetha-c-t
+
+SUMMARY:
+Certified Product Owner (PSPO I), Scrum Master (PSM I), and 6× Salesforce accredited professional with 4+ years of experience delivering digital product transformation, enterprise CRM, and Salesforce initiatives. Skilled in product roadmap management, stakeholder management, backlog prioritization, requirement gathering, and Agile delivery across cross-functional teams. Proven record driving measurable business outcomes through workflow optimization, AI process automation, and product enhancements.
+
+CURRENT ROLE:
+Company: Caterpillar Inc., Chennai, India (Sep 2021 – Present)
+
+Digital Product Owner (Jun 2025 – Present):
+- Led 2 large-scale enterprise CRM (Salesforce) platforms and 2 industrial IoT platforms supporting real-time asset monitoring and predictive maintenance → 20% reduction in service maintenance delays
+- Owned Salesforce Sales Cloud supporting global pricing & discounting → delivered 56 CRM enhancements contributing to 32% YoY sales growth
+- Reduced dealer approval processing time by 27% through workflow optimization → 2% uplift in sales performance
+- Held bi-weekly PBR sessions across 260+ user stories and 900+ story points → cut cycle time by 15% with zero-defect releases
+- Automated user story lifecycle with AI agents → 55% delivery efficiency improvement, 25% velocity increase
+
+Software Engineer 2 – Business Analyst & Scrum Master (Sep 2023 – Jun 2025):
+- Collaborated with 5 global stakeholder groups across 8 discount workflows → 12% dealer onboarding efficiency increase
+- Defined product vision for onboarding 2 new business units into enterprise pricing platforms across 150+ dealership networks
+- Served as Acting Scrum Master; coached on Agile best practices, Azure DevOps governance → 0% production defect rate, 100% sprint commitment
+- Led 10+ team SDLC Hackathon; automated workflows with Power Automate → 23% reporting efficiency boost
+
+Software Engineer 1 (Sep 2021 – Sep 2023):
+- Implemented Salesforce discounting solutions for 160+ discount programs across Indian dealers
+- Achieved 105% sprint velocity against 95% benchmark with zero production test failures
+
+CERTIFICATIONS:
+Product & Agile:
+- Professional Scrum Product Owner (PSPO I) – Scrum.org
+- Professional Scrum Master (PSM I) – Scrum.org
+- Six Sigma Black Belt – Sixsigmacouncil.org
+
+Salesforce (6× Accredited):
+- Sales Cloud Consultant
+- Business Analyst
+- Administrator
+- AI Associate
+- Platform Developer I
+- Platform Developer II
+
+Extra-curricular achievements:
+- AI Hackathon Lead, Caterpillar India Digital Division (led 10+ PoC ideas from cross-functional teams)
+- Division-Wide Product Showcase Lead (presented 10+ applications to senior stakeholders)
+
+SKILLS:
+Core: Product Ownership, Stakeholder Management, Backlog Prioritization, Requirement Gathering, Sprint Planning, Product Roadmap Management, Agile/Scrum Facilitation, Release Management, CRM Strategy, AI Process Automation
+Salesforce/CRM: Salesforce Sales Cloud, Apex, Lightning Web Components (LWC), System Integrations, Workflow Automation
+Tools: Jira, Azure DevOps, Figma, Git, Confluence, MS Visio, LucidChart, VS Code, Power Automate, GitHub Copilot
+Methodologies: Agile Scrum, PLM, RCA, Business Process Improvement
+
+EDUCATION:
+Bachelor of Engineering in Computer Science
+PSG Institute of Technology and Applied Research, Coimbatore, India | 2021 | 82%
+--- END ---
+`;
+
+  function fwBotMsg(text) {
+    const wrap = document.getElementById('fwChatWrap');
+    const div = document.createElement('div');
+    div.className = 'fw-bubble bot';
+    div.textContent = text;
+    wrap.appendChild(div);
+    wrap.scrollTop = wrap.scrollHeight;
+    return div;
+  }
+  function fwUserMsg(text) {
+    const wrap = document.getElementById('fwChatWrap');
+    const div = document.createElement('div');
+    div.className = 'fw-bubble user';
+    div.textContent = text;
+    wrap.appendChild(div);
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+
+  async function fwAsk() {
+    const input = document.getElementById('fwChatInput');
+    const question = input.value.trim();
+    if (!question) return;
+    input.value = '';
+    fwUserMsg(question);
+
+    const thinking = fwBotMsg('Thinking…');
+    thinking.classList.add('thinking');
+
+    try {
+      const res = await fetch('https://benetha-chat-proxy.fakeidf362.workers.dev/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 300,
+          system: FW_CONTEXT,
+          messages: [{ role: 'user', content: question }]
+        })
+      });
+      const data = await res.json();
+      const reply = data.content && data.content[0] && data.content[0].text
+        ? data.content[0].text
+        : FW_OUT_OF_SCOPE;
+      thinking.textContent = reply;
+      thinking.classList.remove('thinking');
+    } catch (e) {
+      thinking.textContent = 'Sorry, I ran into an issue. Please try again.';
+      thinking.classList.remove('thinking');
+    }
+    document.getElementById('fwChatWrap').scrollTop = 9999;
+  }
 </script>
 </body>
 </html>
