@@ -405,15 +405,16 @@
     }
     y += 14;
 
-    fieldRow("Sponsor", val("pSponsor"));
-    fieldRow("Project manager", val("pManager"));
-    fieldRow("Department", val("pDept"));
-    fieldRow("Start date", val("startDate"));
-    fieldRow("Target end date", val("endDate"));
     const currency = val("currency");
     const budget = val("budgetVal");
-    fieldRow("Budget", budget ? `${currency} ${Number(budget).toLocaleString()}` : "");
-    y += 10;
+    table(["Field", "Details"], [
+      ["Sponsor", val("pSponsor") || "—"],
+      ["Project manager", val("pManager") || "—"],
+      ["Department / division", val("pDept") || "—"],
+      ["Start date", val("startDate") || "—"],
+      ["Target end date", val("endDate") || "—"],
+      ["Budget", budget ? `${currency} ${Number(budget).toLocaleString()}` : "—"]
+    ]);
 
     /* 02 Purpose & Objectives */
     sectionTitle("02", "Purpose & Objectives");
@@ -489,7 +490,8 @@
 
     footer();
 
-    const filename = (val("pName") || "Project_Charter").replace(/[^a-z0-9]+/gi, "_") + ".pdf";
+    const safeName = (val("pName") || "Untitled Project").replace(/[\\/:*?"<>|]+/g, "").trim();
+    const filename = `${safeName}_Project Charter.pdf`;
     doc.save(filename);
     showToast("PDF downloaded");
   }
@@ -498,9 +500,8 @@
 
   /* ================= Init ================= */
   initTheme();
-  if (!loadDraft()) {
-    seedDefaults();
-  }
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
+  seedDefaults();
   updateProgress();
   initNavObserver();
 })();
