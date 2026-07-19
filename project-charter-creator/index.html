@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Charter Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Left rail: section nav + seal -->
+  <aside class="rail">
+    <div class="rail-top">
+      <div class="brand">
+        <span class="brand-mark">§</span>
+        <span class="brand-text">Charter<br>Builder</span>
+      </div>
+      <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle light mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 4a1 1 0 011 1v1a1 1 0 11-2 0V5a1 1 0 011-1zm0 14a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm8-6a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM6 12a1 1 0 01-1 1H4a1 1 0 110-2h1a1 1 0 011 1zm11.31 5.31a1 1 0 01-1.42 0l-.7-.7a1 1 0 111.42-1.42l.7.7a1 1 0 010 1.42zM7.81 7.81a1 1 0 01-1.42 0l-.7-.7a1 1 0 011.42-1.42l.7.7a1 1 0 010 1.42zm9.5-1.42a1 1 0 010 1.42l-.7.7a1 1 0 11-1.42-1.42l.7-.7a1 1 0 011.42 0zM6.39 16.61a1 1 0 010 1.42l-.7.7a1 1 0 11-1.42-1.42l.7-.7a1 1 0 011.42 0zM12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg>
+      </button>
+    </div>
+
+    <div class="seal-wrap">
+      <svg class="seal" viewBox="0 0 100 100" width="72" height="72">
+        <circle class="seal-track" cx="50" cy="50" r="42" fill="none" stroke-width="6"/>
+        <circle class="seal-progress" id="sealProgress" cx="50" cy="50" r="42" fill="none" stroke-width="6" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+        <text x="50" y="47" class="seal-pct" id="sealPct" text-anchor="middle">0%</text>
+        <text x="50" y="63" class="seal-label" text-anchor="middle">complete</text>
+      </svg>
+    </div>
+
+    <nav class="section-nav" id="sectionNav">
+      <a href="#sec-info" class="nav-item" data-target="sec-info"><span class="nav-num">01</span>Project Information</a>
+      <a href="#sec-purpose" class="nav-item" data-target="sec-purpose"><span class="nav-num">02</span>Purpose &amp; Objectives</a>
+      <a href="#sec-scope" class="nav-item" data-target="sec-scope"><span class="nav-num">03</span>Scope</a>
+      <a href="#sec-stakeholders" class="nav-item" data-target="sec-stakeholders"><span class="nav-num">04</span>Stakeholders</a>
+      <a href="#sec-deliverables" class="nav-item" data-target="sec-deliverables"><span class="nav-num">05</span>Deliverables &amp; Milestones</a>
+      <a href="#sec-risks" class="nav-item" data-target="sec-risks"><span class="nav-num">06</span>Risks &amp; Mitigations</a>
+      <a href="#sec-approval" class="nav-item" data-target="sec-approval"><span class="nav-num">07</span>Approval</a>
+    </nav>
+
+    <div class="rail-bottom">
+      <span class="autosave" id="autosaveIndicator">Draft saved</span>
+      <button class="reset-btn" id="resetBtn" type="button">Clear draft</button>
+    </div>
+  </aside>
+
+  <!-- Main document -->
+  <main class="doc">
+    <header class="doc-header">
+      <p class="eyebrow">Formal project record</p>
+      <h1>Project Charter</h1>
+      <p class="subtitle">Define scope, objectives, ownership and risk before work begins &mdash; and export a signed-ready PDF.</p>
+    </header>
+
+    <form id="charterForm" novalidate>
+
+      <!-- 01 Project Information -->
+      <section class="sec" id="sec-info">
+        <h2><span class="sec-num">01</span>Project Information</h2>
+        <div class="grid-2">
+          <label>Project name
+            <input type="text" id="pName" placeholder="e.g., Project Apex" required>
+          </label>
+          <label>Project code <span class="opt">optional</span>
+            <input type="text" id="pCode" placeholder="e.g., APX-2026">
+          </label>
+        </div>
+        <div class="grid-2">
+          <label>Sponsor
+            <input type="text" id="pSponsor" placeholder="e.g., Priya Menon">
+          </label>
+          <label>Project manager
+            <input type="text" id="pManager" placeholder="e.g., Arjun Rao">
+          </label>
+        </div>
+        <div class="grid-2">
+          <label>Start date
+            <input type="date" id="startDate">
+          </label>
+          <label>Target end date
+            <input type="date" id="endDate">
+          </label>
+        </div>
+        <div class="grid-2">
+          <label>Budget
+            <div class="budget-input">
+              <select id="currency">
+                <option value="USD">USD</option><option value="EUR">EUR</option><option value="JPY">JPY</option>
+                <option value="GBP">GBP</option><option value="AUD">AUD</option><option value="CAD">CAD</option>
+                <option value="CHF">CHF</option><option value="CNY">CNY</option><option value="HKD">HKD</option>
+                <option value="NZD">NZD</option><option value="INR">INR</option><option value="SEK">SEK</option>
+                <option value="KRW">KRW</option><option value="SGD">SGD</option><option value="NOK">NOK</option>
+                <option value="MXN">MXN</option><option value="TRY">TRY</option><option value="RUB">RUB</option>
+                <option value="BRL">BRL</option><option value="ZAR">ZAR</option><option value="SAR">SAR</option>
+                <option value="AED">AED</option><option value="THB">THB</option>
+              </select>
+              <input type="number" id="budgetVal" placeholder="0.00" min="0" step="0.01">
+            </div>
+          </label>
+          <label>Department / division <span class="opt">optional</span>
+            <input type="text" id="pDept" placeholder="e.g., Product Engineering">
+          </label>
+        </div>
+      </section>
+
+      <!-- 02 Purpose & Objectives -->
+      <section class="sec" id="sec-purpose">
+        <h2><span class="sec-num">02</span>Purpose &amp; Objectives</h2>
+        <label class="block">Purpose statement
+          <textarea id="purpose" rows="3" placeholder="Why this project exists and the problem it solves."></textarea>
+        </label>
+        <div class="grid-2">
+          <div class="list-block" data-list="objectives">
+            <span class="list-label">Objectives</span>
+            <div class="dyn-list" id="objectives"></div>
+            <button type="button" class="add-line" data-add="objectives">+ Add objective</button>
+          </div>
+          <div class="list-block" data-list="successCriteria">
+            <span class="list-label">Success criteria</span>
+            <div class="dyn-list" id="successCriteria"></div>
+            <button type="button" class="add-line" data-add="successCriteria">+ Add criterion</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 Scope -->
+      <section class="sec" id="sec-scope">
+        <h2><span class="sec-num">03</span>Scope</h2>
+        <div class="grid-2">
+          <div class="list-block" data-list="inScope">
+            <span class="list-label">In scope</span>
+            <div class="dyn-list" id="inScope"></div>
+            <button type="button" class="add-line" data-add="inScope">+ Add item</button>
+          </div>
+          <div class="list-block" data-list="outScope">
+            <span class="list-label">Out of scope</span>
+            <div class="dyn-list" id="outScope"></div>
+            <button type="button" class="add-line" data-add="outScope">+ Add item</button>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="list-block" data-list="assumptions">
+            <span class="list-label">Assumptions</span>
+            <div class="dyn-list" id="assumptions"></div>
+            <button type="button" class="add-line" data-add="assumptions">+ Add assumption</button>
+          </div>
+          <div class="list-block" data-list="constraints">
+            <span class="list-label">Constraints</span>
+            <div class="dyn-list" id="constraints"></div>
+            <button type="button" class="add-line" data-add="constraints">+ Add constraint</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 Stakeholders -->
+      <section class="sec" id="sec-stakeholders">
+        <h2><span class="sec-num">04</span>Stakeholders</h2>
+        <div class="table-wrap">
+          <table id="stakeholdersTable">
+            <thead>
+              <tr><th>Name</th><th>Role</th><th>Responsibility</th><th>Influence</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="button" class="add-row" data-table="stakeholdersTable">+ Add stakeholder</button>
+      </section>
+
+      <!-- 05 Deliverables & Milestones -->
+      <section class="sec" id="sec-deliverables">
+        <h2><span class="sec-num">05</span>Deliverables &amp; Milestones</h2>
+        <div class="table-wrap">
+          <table id="deliverablesTable">
+            <thead>
+              <tr><th>Deliverable</th><th>Owner</th><th>Target date</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="button" class="add-row" data-table="deliverablesTable">+ Add deliverable</button>
+      </section>
+
+      <!-- 06 Risks & Mitigations -->
+      <section class="sec" id="sec-risks">
+        <h2><span class="sec-num">06</span>Risks &amp; Mitigations</h2>
+        <div class="table-wrap">
+          <table id="risksTable">
+            <thead>
+              <tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th><th>Owner</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="button" class="add-row" data-table="risksTable">+ Add risk</button>
+      </section>
+
+      <!-- 07 Approval -->
+      <section class="sec" id="sec-approval">
+        <h2><span class="sec-num">07</span>Approval</h2>
+        <p class="sec-hint">Signing this charter authorizes the project team to proceed under the terms defined above.</p>
+        <div class="grid-2">
+          <div class="sign-block">
+            <label>Sponsor name
+              <input type="text" id="sponsorSignName" placeholder="Full name">
+            </label>
+            <div class="sign-line"></div>
+            <label class="sign-date-label">Date
+              <input type="date" id="sponsorSignDate">
+            </label>
+          </div>
+          <div class="sign-block">
+            <label>Project manager name
+              <input type="text" id="pmSignName" placeholder="Full name">
+            </label>
+            <div class="sign-line"></div>
+            <label class="sign-date-label">Date
+              <input type="date" id="pmSignDate">
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <div class="doc-actions">
+        <button type="button" class="download-btn" id="downloadBtn">Generate &amp; download PDF</button>
+        <p class="doc-actions-note">Your draft autosaves in this browser only. Nothing is uploaded.</p>
+      </div>
+
+    </form>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
